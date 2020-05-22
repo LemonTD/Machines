@@ -1,5 +1,3 @@
-// import router from './routes';
-
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -7,12 +5,18 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 
-const db = require ('./db/mongo');
+// const db = require ('./db/mongo');
 const {startDatabase, getDatabase} = require('./db/mongo');
 const {getMachines, getAllMachines} = require('./MachinesController/machine');
 // const {deleteMachine, updateMachine} = require('./MachinesController/machine');
 
+
+const db2 = startDatabase()
+db2.then((results)=>{
+  console.log(results)
+}).catch(e=>console.log(e))
 const app = express();
+
 
 // adding Helmet to enhance API's security
 app.use(helmet());
@@ -45,37 +49,34 @@ app.use(morgan('combined'));
   // });
 
 // defining an endpoint to return all Machines
-app.get('/machines', async (req, res) => {
+app.get('/machines', async(req, res) => {
+  const machine = await startDatabase()
     const gotMachine = req.body;
-    await getDatabase(req.params, gotMachine)
+     getDatabase(req.params, gotMachine)
     res.status(200).send({
       success: 'true',
       message: 'machines retrieved successfully',
-      machines: db
+      machines: machine
     })
 
   });
-  app.get('/machines/:id', async (req, res) => {
+  app.get('/machines/:id',async (req, res) => {
+    const machine = await startDatabase()
     const gotMachine = req.body;
-    await getDatabase(req.params.id, gotMachine)
+     getDatabase(req.params.id, gotMachine)
     res.status(200).send({
       success: 'true',
       message: 'machine retrieved successfully',
-      machines: db
+      machines: machine
     })
 
   });
 
-startDatabase().then(async () => {
-    // await insertMachine({
-    //     title: 'Hello, now from the in-memory database!'
-    
-    // });
-  
-
-  const PORT = 3002;
-  
-  app.listen(PORT, () => {
-    console.log(`server running on port ${PORT}`)
-  });
-});
+startDatabase()
+  .then(()=>{
+    const PORT = 3002;
+    app.listen(PORT, ()=>{
+      console.log(`server running on port${PORT}`)
+    })
+  })
+  .catch(e=>console.log(e))

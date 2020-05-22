@@ -1,23 +1,15 @@
-// const {MongoMemoryServer} = require('mongodb-memory-server');
-// const {MongoClient} = require('mongodb');
 
-
+let database = null
 
 async function startDatabase(){
  if(typeof require !== 'undefined') XLSX = require('xlsx');
-  const workbook = XLSX.readFile('/home/lemonod/NXTgrid/src/db/nxtgrid.xlsx');
+  const workbook = await XLSX.readFile('/home/lemonod/NXTgrid/src/db/nxtgrid.xlsx');
   const sheet_name_list = workbook.SheetNames;
-  return database = console.log(XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]))
+  const database = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+  return database;
 
 
 }
-
-// async function startDatabase() {
-//   const mongo = new MongoMemoryServer();
-//   const mongoDBURL = await mongo.getConnectionString();
-//   const connection = await MongoClient.connect(mongoDBURL, { useUnifiedTopology: true });
-  // database = connection.db();
-// }
 
 async function getDatabase() {
   if (!database) await startDatabase();
@@ -28,13 +20,3 @@ module.exports = {
   getDatabase,
   startDatabase,
 };
-
-// const machines =  [
-//     {
-//       id: 1,
-//       title: "machine1",
-//       description: "spear parts"
-//     }
-// ];
-
-// export default todos;
