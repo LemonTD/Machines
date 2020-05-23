@@ -7,14 +7,11 @@ const morgan = require('morgan');
 
 // const db = require ('./db/mongo');
 const {startDatabase, getDatabase} = require('./db/mongo');
-const {getMachines, getAllMachines} = require('./MachinesController/machine');
+// const {getMachines, getAllMachines} = require('./MachinesController/machine');
 // const {deleteMachine, updateMachine} = require('./MachinesController/machine');
 
 
-const db2 = startDatabase()
-db2.then((results)=>{
-  console.log(results)
-}).catch(e=>console.log(e))
+
 const app = express();
 
 
@@ -60,14 +57,14 @@ app.get('/machines', async(req, res) => {
     })
 
   });
-  app.get('/machines/:id',async (req, res) => {
+  app.get('/machines/:id/datapoints',async (req, res) => {
     const machine = await startDatabase()
     const gotMachine = req.body;
      getDatabase(req.params.id, gotMachine)
     res.status(200).send({
       success: 'true',
       message: 'machine retrieved successfully',
-      machines: machine
+      machines: machine[1]
     })
 
   });
@@ -76,7 +73,7 @@ startDatabase()
   .then(()=>{
     const PORT = 3002;
     app.listen(PORT, ()=>{
-      console.log(`server running on port${PORT}`)
+      console.log(`server running on port ${PORT}`)
     })
   })
   .catch(e=>console.log(e))

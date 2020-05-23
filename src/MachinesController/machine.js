@@ -1,7 +1,11 @@
 const {getDatabase} = require('../db/mongo');
-const {ObjectID} = require('mongodb');
 
 
+
+const db2 = startDatabase()
+db2.then((results)=>{
+  console.log(results)
+}).catch(e=>console.log(e))
 const collectionName = 'machines';
 
 // async function insertMachine(machine) {
